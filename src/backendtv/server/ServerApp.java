@@ -1,6 +1,7 @@
 package backendtv.server;
 
 import backendtv.client.Client;
+import backendtv.notification.ObserverHandler;
 import backendtv.process.ContextActions;
 import backendtv.storage.Database;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -23,7 +24,7 @@ import java.util.Map;
  * @since 1.0.0
  * @author Mihai Negru
  */
-public final class ServerApp {
+public final class ServerApp implements ObserverHandler {
     private final Database database;
     private ContextActions actions;
     private Client activeClient;
@@ -281,7 +282,6 @@ public final class ServerApp {
         if (errCode) {
             activeClient = new Client();
         }
-
     }
 
     /**
@@ -306,5 +306,34 @@ public final class ServerApp {
      */
     public Database fetchDatabase() {
         return database;
+    }
+
+    @Override
+    public void updateNotifications(final String message, final String movieName, final List<String> genres) {
+        activeClient.updateNotifications(message, movieName, genres);
+
+        final var users = database.collection("users").getMembers();
+
+        if (users == null) {
+            return;
+        }
+
+        for (var user : users) {
+            for (var genre : user.get("subscribedGenres").split(",")) {
+                if (genres.contains(genre)) {
+                    final String userNotifications = user.get("notifications");
+
+                    if (userNotifications.equals("null")) {
+                        user.put("notifications", movieName + ";" + message);
+                    } else {
+                        user.put("notifications", userNotifications + "," + movieName + ";" + message);
+                    }
+
+                    database.collection("users").modifyMember("name", user.get("name"), user);
+
+                    break;
+                }
+            }
+        }
     }
 }

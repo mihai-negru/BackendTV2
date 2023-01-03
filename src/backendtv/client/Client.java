@@ -1,5 +1,6 @@
 package backendtv.client;
 
+import backendtv.notification.ObserverHandler;
 import backendtv.pagestype.PageType;
 
 import java.util.*;
@@ -18,7 +19,7 @@ import java.util.*;
  * @since 1.0.0
  * @author Mihai Negru
  */
-public final class Client {
+public final class Client implements ObserverHandler {
     private static final int PREMIUM_COST = 10;
     private PageType loadedPage;
     private final String name;
@@ -214,10 +215,12 @@ public final class Client {
         return subscribedGenres;
     }
 
-    public void subscribeToGenre(final String genre) {
-        if (genre != null) {
-            subscribedGenres.add(genre);
+    public boolean subscribeToGenre(final String genre) {
+        if ((genre == null) || (subscribedGenres.contains(genre))) {
+            return false;
         }
+
+        return subscribedGenres.add(genre);
     }
 
     /**
@@ -440,5 +443,20 @@ public final class Client {
         }
 
         return ratedMovies.add(movieName);
+    }
+
+    @Override
+    public void updateNotifications(final String message, final String movieName, final List<String> genres) {
+        if ((message == null) || (movieName == null) || (genres == null)) {
+            return;
+        }
+
+        for (var genre : subscribedGenres) {
+            if (genres.contains(genre)) {
+                notifications.add(movieName + ";" + message);
+
+                return;
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package backendtv.process.actiontype;
 
 import backendtv.pagestype.PageType;
+import backendtv.parser.JsonParser;
 import backendtv.server.ServerApp;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import datafetch.ActionFetch;
@@ -34,8 +35,12 @@ public class SubscribeAction implements ActionCommand {
                 final var movieGenres = Arrays.asList(movieInfo.get("genres").split(","));
 
                 if (movieGenres.contains(selectedGenre)) {
-                    // Here the bitch subscribes to the genres
-                    client.subscribeToGenre(selectedGenre);
+                    if (!client.subscribeToGenre(selectedGenre)) {
+                        parserObject.put("error", "Error");
+                        parserObject.putArray("currentMoviesList");
+                        JsonParser.parseClient(parserObject);
+                        output.add(parserObject);
+                    }
                 } else {
                     parserObject.put("error", "Error");
                     parserObject.putArray("currentMoviesList");
