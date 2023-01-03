@@ -1,7 +1,8 @@
-package backendtv.process.actiontype;
+package backendtv.process.actiontype.moviesactions;
 
 import backendtv.pagestype.PageType;
 import backendtv.parser.JsonParser;
+import backendtv.process.actiontype.ActionCommand;
 import backendtv.server.ServerApp;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import datafetch.ActionFetch;
@@ -39,16 +40,12 @@ public final class LikeAction implements ActionCommand {
 
         final var parserObject = output.addObject();
         if (client.getLoadedPage() != PageType.DETAILS) {
-            parserObject.put("error", "Error");
-            parserObject.putArray("currentMoviesList");
-            parserObject.putNull("currentUser");
+            JsonParser.parseBasicError(parserObject);
         } else {
             movieToLike = client.getSeeMovie();
 
             if (!client.likeMovie(movieToLike)) {
-                parserObject.put("error", "Error");
-                parserObject.putArray("currentMoviesList");
-                parserObject.putNull("currentUser");
+                JsonParser.parseBasicError(parserObject);
             } else {
                 server.fetchDatabase()
                         .collection("movies")

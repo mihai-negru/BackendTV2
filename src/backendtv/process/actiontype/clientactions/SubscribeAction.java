@@ -1,7 +1,8 @@
-package backendtv.process.actiontype;
+package backendtv.process.actiontype.clientactions;
 
 import backendtv.pagestype.PageType;
 import backendtv.parser.JsonParser;
+import backendtv.process.actiontype.ActionCommand;
 import backendtv.server.ServerApp;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import datafetch.ActionFetch;
@@ -22,9 +23,7 @@ public class SubscribeAction implements ActionCommand {
 
         final var parserObject = output.objectNode();
         if (client.getLoadedPage() != PageType.DETAILS) {
-            parserObject.put("error", "Error");
-            parserObject.putArray("currentMoviesList");
-            parserObject.putNull("currentUser");
+            JsonParser.parseBasicError(parserObject);
             output.add(parserObject);
         } else {
             final var movieInfo = database.collection("movies").findOne("name", client.getSeeMovie());
@@ -42,9 +41,7 @@ public class SubscribeAction implements ActionCommand {
                         output.add(parserObject);
                     }
                 } else {
-                    parserObject.put("error", "Error");
-                    parserObject.putArray("currentMoviesList");
-                    parserObject.putNull("currentUser");
+                    JsonParser.parseBasicError(parserObject);
                     output.add(parserObject);
                 }
             }

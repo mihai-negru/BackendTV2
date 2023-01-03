@@ -1,7 +1,8 @@
-package backendtv.process.actiontype;
+package backendtv.process.actiontype.pagesactions;
 
 import backendtv.pagestype.PageType;
 import backendtv.parser.JsonParser;
+import backendtv.process.actiontype.ActionCommand;
 import backendtv.server.ServerApp;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import datafetch.ActionFetch;
@@ -56,9 +57,7 @@ public final class ChangePageAction implements ActionCommand {
         final var parserObject = output.objectNode();
         if ((changePage == PageType.LOGIN) || (changePage == PageType.REGISTER)) {
             if (clientPage != PageType.NO_AUTH) {
-                parserObject.put("error", "Error");
-                parserObject.putArray("currentMoviesList");
-                parserObject.putNull("currentUser");
+                JsonParser.parseBasicError(parserObject);
                 output.add(parserObject);
             } else {
                 client.changePage(changePage);
@@ -94,7 +93,8 @@ public final class ChangePageAction implements ActionCommand {
             if ((selectedMovie == null) || (clientPage != PageType.MOVIES)) {
                 parserObject.put("error", "Error");
                 parserObject.putArray("currentMoviesList");
-                JsonParser.parseClient(parserObject);
+//                JsonParser.parseClient(parserObject);
+                parserObject.putNull("currentUser");
                 output.add(parserObject);
             } else {
                 if (client.areMoviesFiltered()) {
@@ -108,9 +108,7 @@ public final class ChangePageAction implements ActionCommand {
                         client.changePage(changePage);
                         client.setSeeMovie(selectedMovie);
                     } else {
-                        parserObject.put("error", "Error");
-                        parserObject.putArray("currentMoviesList");
-                        parserObject.putNull("currentUser");
+                        JsonParser.parseBasicError(parserObject);
                         output.add(parserObject);
                     }
                 } else {
@@ -124,9 +122,7 @@ public final class ChangePageAction implements ActionCommand {
                         client.changePage(changePage);
                         client.setSeeMovie(selectedMovie);
                     } else {
-                        parserObject.put("error", "Error");
-                        parserObject.putArray("currentMoviesList");
-                        parserObject.putNull("currentUser");
+                        JsonParser.parseBasicError(parserObject);
                         output.add(parserObject);
                     }
                 }

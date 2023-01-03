@@ -1,6 +1,11 @@
 package backendtv.process.actionfactory;
 
 import backendtv.process.actiontype.*;
+import backendtv.process.actiontype.adminactions.AdminDatabaseAction;
+import backendtv.process.actiontype.clientactions.*;
+import backendtv.process.actiontype.moviesactions.*;
+import backendtv.process.actiontype.pagesactions.ChangePageAction;
+import backendtv.process.actiontype.pagesactions.ChangePageBackAction;
 import datafetch.ActionFetch;
 
 /**

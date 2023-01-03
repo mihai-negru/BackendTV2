@@ -1,5 +1,7 @@
-package backendtv.process.actiontype;
+package backendtv.process.actiontype.pagesactions;
 
+import backendtv.parser.JsonParser;
+import backendtv.process.actiontype.ActionCommand;
 import backendtv.server.ServerApp;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
@@ -16,16 +18,11 @@ public final class ChangePageBackAction implements ActionCommand {
         final var parserObject = output.objectNode();
         if (client.getStatus()) {
             if (!client.changePageBack()) {
-                parserObject.put("error", "Error");
-                parserObject.putArray("currentMoviesList");
-                parserObject.putNull("currentUser");
+                JsonParser.parseBasicError(parserObject);
                 output.add(parserObject);
             }
         } else {
-            System.out.println("Client is not active");
-            parserObject.put("error", "Error");
-            parserObject.putArray("currentMoviesList");
-            parserObject.putNull("currentUser");
+            JsonParser.parseBasicError(parserObject);
             output.add(parserObject);
         }
     }

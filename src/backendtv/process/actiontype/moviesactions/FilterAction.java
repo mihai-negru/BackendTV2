@@ -1,7 +1,8 @@
-package backendtv.process.actiontype;
+package backendtv.process.actiontype.moviesactions;
 
 import backendtv.pagestype.PageType;
 import backendtv.parser.JsonParser;
+import backendtv.process.actiontype.ActionCommand;
 import backendtv.server.ServerApp;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import datafetch.ActionFetch;
@@ -161,9 +162,7 @@ public final class FilterAction implements ActionCommand {
 
         final var parserObject = output.addObject();
         if (server.fetchActiveClient().getLoadedPage() != PageType.MOVIES) {
-            parserObject.put("error", "Error");
-            parserObject.putArray("currentMoviesList");
-            parserObject.putNull("currentUser");
+            JsonParser.parseBasicError(parserObject);
         } else {
             final List<Map<String, String>> movies = new ArrayList<>();
             for (String movieName : client.getAvailableMovies()) {

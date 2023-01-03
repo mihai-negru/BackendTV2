@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * <p>Collection of data, stores a {@code Map} of String to String pairs,
@@ -54,7 +55,7 @@ public final class DataCollection {
         }
 
         for (var member : members) {
-            if (member.containsKey(fieldKey) && member.containsValue(fieldValue)) {
+            if (member.containsKey(fieldKey) && member.get(fieldKey).equals(fieldValue)) {
                 return new HashMap<>(member);
             }
         }
@@ -78,7 +79,7 @@ public final class DataCollection {
         final List<Map<String, String>> foundMembers = new ArrayList<>();
 
         for (var member : members) {
-            if (member.containsKey(fieldKey) && member.containsValue(fieldValue)) {
+            if (member.containsKey(fieldKey) && member.get(fieldKey).equals(fieldValue)) {
                 foundMembers.add(new HashMap<>(member));
             }
         }
@@ -129,7 +130,7 @@ public final class DataCollection {
         }
 
         for (var member : members) {
-            if (member.containsKey(fieldKey) && member.containsValue(fieldValue)) {
+            if (member.containsKey(fieldKey) && member.get(fieldKey).equals(fieldValue)) {
                 member.clear();
                 member.putAll(fields);
 
@@ -159,7 +160,7 @@ public final class DataCollection {
         }
 
         for (var member : members) {
-            if (member.containsKey(fieldKey) && member.containsValue(fieldValue)
+            if (member.containsKey(fieldKey) && member.get(fieldKey).equals(fieldValue)
                     && member.containsKey(changeFieldKey)) {
                 member.put(changeFieldKey, changeFieldValue);
 
@@ -168,5 +169,19 @@ public final class DataCollection {
         }
 
         return false;
+    }
+
+    public void delete(final String fieldKey, final String fieldValue) {
+        if ((fieldKey == null) || (fieldValue == null)) {
+            return;
+        }
+
+        members.removeIf(member -> {
+            if (!member.containsKey(fieldKey)) {
+                return false;
+            }
+
+            return member.get(fieldKey).equals(fieldValue);
+        });
     }
 }

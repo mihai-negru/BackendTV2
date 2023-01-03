@@ -1,6 +1,8 @@
-package backendtv.process.actiontype;
+package backendtv.process.actiontype.clientactions;
 
 import backendtv.pagestype.PageType;
+import backendtv.parser.JsonParser;
+import backendtv.process.actiontype.ActionCommand;
 import backendtv.server.ServerApp;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import datafetch.ActionFetch;
@@ -37,17 +39,11 @@ public final class BuyTokensAction implements ActionCommand {
 
         final var parserObject = output.objectNode();
         if (client.getLoadedPage() != PageType.UPGRADES) {
-            parserObject.put("error", "Error");
-            parserObject.putArray("currentMoviesList");
-            parserObject.putNull("currentUser");
-
+            JsonParser.parseBasicError(parserObject);
             output.add(parserObject);
         } else {
             if (!client.buyTokens(tokensToBuy)) {
-                parserObject.put("error", "Error");
-                parserObject.putArray("currentMoviesList");
-                parserObject.putNull("currentUser");
-
+                JsonParser.parseBasicError(parserObject);
                 output.add(parserObject);
             }
         }

@@ -17,6 +17,11 @@ public final class JsonParser {
         // Do not let anyone instantiate this class
     }
 
+    public static void parseBasicError(final ObjectNode output) {
+        output.put("error", "Error");
+        output.putArray("currentMoviesList");
+        output.putNull("currentUser");
+    }
     /**
      * <p>Parses a {@code Client} object to a Json File.</p>
      *

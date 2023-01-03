@@ -309,8 +309,9 @@ public final class ServerApp implements ObserverHandler {
     }
 
     @Override
-    public void updateNotifications(final String message, final String movieName, final List<String> genres) {
-        activeClient.updateNotifications(message, movieName, genres);
+    public void updateNotifications(final String message, final String movieName, final List<String> genres,
+                                    final List<String> bannedCountries) {
+        activeClient.updateNotifications(message, movieName, genres, bannedCountries);
 
         final var users = database.collection("users").getMembers();
 
@@ -319,6 +320,56 @@ public final class ServerApp implements ObserverHandler {
         }
 
         for (var user : users) {
+            if (bannedCountries.contains(user.get("country"))) {
+                continue;
+            }
+
+            if (message.equals("DELETE")) {
+                var tempMoviesString = user.get("purchasedMovies");
+                if (!tempMoviesString.equals("null")) {
+                    List<String> tempMoviesList = new ArrayList<>(Arrays.asList(tempMoviesString.split(",")));
+
+                    if (tempMoviesList.contains(movieName)) {
+                        final String userAccountType = user.get("accountType");
+
+                        if (userAccountType.equals("premium")) {
+                            user.put("numFreePremiumMovies",
+                                    Integer.toString(Integer.parseInt(user.get("numFreePremiumMovies")) + 1));
+                        } else if (userAccountType.equals("standard")) {
+                            user.put("tokensCount",
+                                    Integer.toString(Integer.parseInt(user.get("tokensCount")) + 2));
+                        }
+
+                        tempMoviesList.remove(movieName);
+                        user.put("purchasedMovies", String.join(",", tempMoviesList));
+
+                        tempMoviesString = user.get("watchedMovies");
+                        if (!tempMoviesString.equals("null")) {
+                            tempMoviesList = new ArrayList<>(Arrays.asList(tempMoviesString.split(",")));
+
+                            tempMoviesList.remove(movieName);
+                            user.put("watchedMovies", String.join(",", tempMoviesList));
+                        }
+
+                        tempMoviesString = user.get("likedMovies");
+                        if (!tempMoviesString.equals("null")) {
+                            tempMoviesList = new ArrayList<>(Arrays.asList(tempMoviesString.split(",")));
+
+                            tempMoviesList.remove(movieName);
+                            user.put("likedMovies", String.join(",", tempMoviesList));
+                        }
+
+                        tempMoviesString = user.get("ratedMovies");
+                        if (!tempMoviesString.equals("null")) {
+                            tempMoviesList = new ArrayList<>(Arrays.asList(tempMoviesString.split(",")));
+
+                            tempMoviesList.remove(movieName);
+                            user.put("ratedMovies", String.join(",", tempMoviesList));
+                        }
+                    }
+                }
+            }
+
             for (var genre : user.get("subscribedGenres").split(",")) {
                 if (genres.contains(genre)) {
                     final String userNotifications = user.get("notifications");
@@ -329,11 +380,11 @@ public final class ServerApp implements ObserverHandler {
                         user.put("notifications", userNotifications + "," + movieName + ";" + message);
                     }
 
-                    database.collection("users").modifyMember("name", user.get("name"), user);
-
                     break;
                 }
             }
+
+            database.collection("users").modifyMember("name", user.get("name"), user);
         }
     }
 }

@@ -446,9 +446,20 @@ public final class Client implements ObserverHandler {
     }
 
     @Override
-    public void updateNotifications(final String message, final String movieName, final List<String> genres) {
+    public void updateNotifications(final String message, final String movieName, final List<String> genres,
+                                    final List<String> bannedCountries) {
         if ((message == null) || (movieName == null) || (genres == null)) {
             return;
+        }
+
+        if (bannedCountries.contains(country)) {
+            return;
+        }
+
+        if (message.equals("ADD")) {
+            addAvailableMovie(movieName);
+        } else if (message.equals("DELETE")) {
+            removeAvailableMovie(movieName);
         }
 
         for (var genre : subscribedGenres) {
@@ -457,6 +468,37 @@ public final class Client implements ObserverHandler {
 
                 return;
             }
+        }
+    }
+
+    public void addAvailableMovie(final String movieName) {
+        if (movieName == null) {
+            return;
+        }
+
+        availableMovies.add(movieName);
+    }
+
+    public void removeAvailableMovie(final String movieName) {
+        if (movieName == null) {
+            return;
+        }
+
+        if (!availableMovies.contains(movieName)) {
+            return;
+        }
+
+        availableMovies.remove(movieName);
+        purchasedMovies.remove(movieName);
+        watchedMovies.remove(movieName);
+        likedMovies.remove(movieName);
+        ratedMovies.remove(movieName);
+        filteredMovies.remove(movieName);
+
+        if (accountType.equals("premium")) {
+            ++numFreePremiumMovies;
+        } else if (accountType.equals("standard")) {
+            tokensCount += 2;
         }
     }
 }

@@ -1,7 +1,8 @@
-package backendtv.process.actiontype;
+package backendtv.process.actiontype.moviesactions;
 
 import backendtv.pagestype.PageType;
 import backendtv.parser.JsonParser;
+import backendtv.process.actiontype.ActionCommand;
 import backendtv.server.ServerApp;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import datafetch.ActionFetch;
@@ -41,20 +42,16 @@ public final class RateAction implements ActionCommand {
         final var server = ServerApp.connect();
         final var client = server.fetchActiveClient();
 
-        final var outputObject = output.addObject();
+        final var parserObject = output.addObject();
         if ((client.getLoadedPage() != PageType.DETAILS)
                 || (movieRate < MIN_RATE) || (movieRate > MAX_RATE)) {
 
-            outputObject.put("error", "Error");
-            outputObject.putArray("currentMoviesList");
-            outputObject.putNull("currentUser");
+            JsonParser.parseBasicError(parserObject);
         } else {
             movieToRate = client.getSeeMovie();
 
             if (!client.rateMovie(movieToRate)) {
-                outputObject.put("error", "Error");
-                outputObject.putArray("currentMoviesList");
-                outputObject.putNull("currentUser");
+                JsonParser.parseBasicError(parserObject);
             } else {
                 final var movie = server.fetchDatabase()
                         .collection("movies")
@@ -78,10 +75,10 @@ public final class RateAction implements ActionCommand {
                                 "rating", movie.get("rating") + "," + movieRate
                         );
 
-                outputObject.putNull("error");
-                JsonParser.parseMovie(outputObject.putArray("currentMoviesList"),
+                parserObject.putNull("error");
+                JsonParser.parseMovie(parserObject.putArray("currentMoviesList"),
                         "name", movieToRate);
-                JsonParser.parseClient(outputObject);
+                JsonParser.parseClient(parserObject);
             }
         }
     }

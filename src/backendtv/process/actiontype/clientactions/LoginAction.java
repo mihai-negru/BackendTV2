@@ -1,7 +1,8 @@
-package backendtv.process.actiontype;
+package backendtv.process.actiontype.clientactions;
 
 import backendtv.parser.JsonParser;
 import backendtv.pagestype.PageType;
+import backendtv.process.actiontype.ActionCommand;
 import backendtv.server.ServerApp;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import datafetch.ActionFetch;
@@ -40,16 +41,12 @@ public final class LoginAction implements ActionCommand {
 
         final var parserObject = output.addObject();
         if (server.fetchActiveClient().getLoadedPage() != PageType.LOGIN) {
-            parserObject.put("error", "Error");
-            parserObject.putArray("currentMoviesList");
-            parserObject.putNull("currentUser");
+            JsonParser.parseBasicError(parserObject);
         } else {
             if (!server.loginClient(loginName, loginPassword)) {
                 server.fetchActiveClient().changePage(PageType.NO_AUTH);
 
-                parserObject.put("error", "Error");
-                parserObject.putArray("currentMoviesList");
-                parserObject.putNull("currentUser");
+                JsonParser.parseBasicError(parserObject);
             } else {
                 parserObject.putNull("error");
                 parserObject.putArray("currentMoviesList");
