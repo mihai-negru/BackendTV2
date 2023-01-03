@@ -2,10 +2,7 @@ package backendtv.client;
 
 import backendtv.pagestype.PageType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>Simple class maintaining the information about a server client.</p>
@@ -39,6 +36,7 @@ public final class Client {
     private final List<String> availableMovies;
     private final List<String> filteredMovies;
     private final List<String> notifications;
+    private final Deque<PageType> pageStack;
     private final boolean isActive;
     private boolean areMoviesFiltered;
 
@@ -102,6 +100,8 @@ public final class Client {
             notifications = new ArrayList<>(Arrays.asList(clientNotifications.split(",")));
         }
 
+        pageStack = new ArrayDeque<>();
+
         isActive = true;
         areMoviesFiltered = false;
     }
@@ -129,6 +129,8 @@ public final class Client {
         availableMovies = null;
         filteredMovies = null;
         notifications = null;
+
+        pageStack = null;
 
         isActive = false;
         areMoviesFiltered = false;
@@ -226,8 +228,24 @@ public final class Client {
      */
     public void changePage(final PageType page) {
         if (page != PageType.UNKNOWN) {
+            if ((loadedPage != PageType.LOGIN)
+                    && (loadedPage != PageType.NO_AUTH)
+                    && (loadedPage != PageType.REGISTER)) {
+                pageStack.push(loadedPage);
+            }
+
             loadedPage = page;
         }
+    }
+
+    public boolean changePageBack() {
+        if (pageStack.isEmpty()) {
+            return false;
+        }
+
+        loadedPage = pageStack.pop();
+
+        return true;
     }
 
     /**
