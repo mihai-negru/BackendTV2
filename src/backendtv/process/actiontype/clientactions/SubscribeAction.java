@@ -35,9 +35,7 @@ public class SubscribeAction implements ActionCommand {
 
                 if (movieGenres.contains(selectedGenre)) {
                     if (!client.subscribeToGenre(selectedGenre)) {
-                        parserObject.put("error", "Error");
-                        parserObject.putArray("currentMoviesList");
-                        JsonParser.parseClient(parserObject);
+                        JsonParser.parseBasicError(parserObject);
                         output.add(parserObject);
                     }
                 } else {
