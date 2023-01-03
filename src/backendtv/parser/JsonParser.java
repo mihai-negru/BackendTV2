@@ -57,6 +57,11 @@ public final class JsonParser {
             for (String movieName : client.getRatedMovies()) {
                 parseMovie(tempArray, "name", movieName);
             }
+
+            tempArray = outputObject.putArray("notifications");
+            for (String notification : client.getNotifications()) {
+                parseNotification(tempArray, notification);
+            }
         } else {
             output.putNull("currentUser");
         }
@@ -154,5 +159,14 @@ public final class JsonParser {
             outputObject.put("rating", rating);
             outputObject.put("numRatings", numRatings);
         }
+    }
+
+    public static void parseNotification(final ArrayNode output, final String notification) {
+        final var outputObject = output.addObject();
+
+        final var aux = notification.split(";");
+
+        outputObject.put("movieName", aux[0]);
+        outputObject.put("message", aux[1]);
     }
 }

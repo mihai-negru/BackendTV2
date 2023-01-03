@@ -1,17 +1,6 @@
 package backendtv.process.actionfactory;
 
-import backendtv.process.actiontype.ActionCommand;
-import backendtv.process.actiontype.BuyPremiumAction;
-import backendtv.process.actiontype.BuyTokensAction;
-import backendtv.process.actiontype.ChangePageAction;
-import backendtv.process.actiontype.FilterAction;
-import backendtv.process.actiontype.LikeAction;
-import backendtv.process.actiontype.LoginAction;
-import backendtv.process.actiontype.PurchaseAction;
-import backendtv.process.actiontype.RateAction;
-import backendtv.process.actiontype.RegisterAction;
-import backendtv.process.actiontype.SearchAction;
-import backendtv.process.actiontype.WatchAction;
+import backendtv.process.actiontype.*;
 import datafetch.ActionFetch;
 
 /**
@@ -37,7 +26,8 @@ public final class ActionFactory {
      * null if the flags are unknown.
      */
     public ActionCommand createAction(final ActionFetch actionInfo) {
-        if (actionInfo.getType().equalsIgnoreCase("on page")) {
+        final String actionType = actionInfo.getType().toLowerCase();
+        if (actionType.equals("on page")) {
             return switch (actionInfo.getFeature()) {
                 case "register" -> new RegisterAction(actionInfo);
                 case "login" -> new LoginAction(actionInfo);
@@ -51,6 +41,10 @@ public final class ActionFactory {
                 case "rate" -> new RateAction(actionInfo);
                 default -> null;
             };
+        }
+
+        if (actionType.equals("back")) {
+            return new ChangePageBackAction();
         }
 
         return new ChangePageAction(actionInfo);

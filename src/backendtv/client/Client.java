@@ -38,6 +38,7 @@ public final class Client {
     private final List<String> ratedMovies;
     private final List<String> availableMovies;
     private final List<String> filteredMovies;
+    private final List<String> notifications;
     private final boolean isActive;
     private boolean areMoviesFiltered;
 
@@ -94,6 +95,13 @@ public final class Client {
         availableMovies = new ArrayList<>(initAvailableMovies);
         filteredMovies = new ArrayList<>();
 
+        final String clientNotifications = clientData.get("notifications");
+        if (clientNotifications.equals("null")) {
+            notifications = new ArrayList<>();
+        } else {
+            notifications = new ArrayList<>(Arrays.asList(clientNotifications.split(",")));
+        }
+
         isActive = true;
         areMoviesFiltered = false;
     }
@@ -120,6 +128,7 @@ public final class Client {
         ratedMovies = null;
         availableMovies = null;
         filteredMovies = null;
+        notifications = null;
 
         isActive = false;
         areMoviesFiltered = false;
@@ -183,6 +192,10 @@ public final class Client {
 
     public List<String> getFilteredMovies() {
         return filteredMovies;
+    }
+
+    public List<String> getNotifications() {
+        return notifications;
     }
 
     /**
