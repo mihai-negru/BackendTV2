@@ -47,8 +47,8 @@ public final class Main {
 
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(args[1]), outputData);
 
-        if (counter == 1) {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("my_result_" + counter + ".json"),
+        if (counter == 2) {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("my_result_" + 10 + ".json"),
                     outputData);
         }
 

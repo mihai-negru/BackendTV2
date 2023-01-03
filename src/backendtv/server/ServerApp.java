@@ -101,7 +101,8 @@ public final class ServerApp {
                         Map.entry("watchedMovies", "null"),
                         Map.entry("likedMovies", "null"),
                         Map.entry("ratedMovies", "null"),
-                        Map.entry("notifications", "null")
+                        Map.entry("notifications", "null"),
+                        Map.entry("subscribedGenres", "null")
                 ));
             }
         }
@@ -243,7 +244,8 @@ public final class ServerApp {
                 Map.entry("watchedMovies", "null"),
                 Map.entry("likedMovies", "null"),
                 Map.entry("ratedMovies", "null"),
-                Map.entry("notifications", "null")
+                Map.entry("notifications", "null"),
+                Map.entry("subscribedGenres", "null")
         ));
 
         return loginClient(clientName, clientPassword);
@@ -272,7 +274,8 @@ public final class ServerApp {
                                 activeClient.getWatchedMovies())),
                         Map.entry("likedMovies", String.join(",", activeClient.getLikedMovies())),
                         Map.entry("ratedMovies", String.join(",", activeClient.getRatedMovies())),
-                        Map.entry("notifications", String.join(",", activeClient.getNotifications()))
+                        Map.entry("notifications", String.join(",", activeClient.getNotifications())),
+                        Map.entry("subscribedGenres", String.join(",", activeClient.getSubscribedGenres()))
                 ));
 
         if (errCode) {

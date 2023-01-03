@@ -39,12 +39,17 @@ public final class ActionFactory {
                 case "watch" -> new WatchAction(actionInfo);
                 case "like" -> new LikeAction(actionInfo);
                 case "rate" -> new RateAction(actionInfo);
+                case "subscribe" -> new SubscribeAction(actionInfo);
                 default -> null;
             };
         }
 
         if (actionType.equals("back")) {
             return new ChangePageBackAction();
+        }
+
+        if (actionType.equals("database")) {
+            return new AdminDatabaseAction(actionInfo);
         }
 
         return new ChangePageAction(actionInfo);

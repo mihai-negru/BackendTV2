@@ -37,6 +37,7 @@ public final class Client {
     private final List<String> filteredMovies;
     private final List<String> notifications;
     private final Deque<PageType> pageStack;
+    private final List<String> subscribedGenres;
     private final boolean isActive;
     private boolean areMoviesFiltered;
 
@@ -102,6 +103,13 @@ public final class Client {
 
         pageStack = new ArrayDeque<>();
 
+        final String clientSubscribedGenres = clientData.get("subscribedGenres");
+        if (clientSubscribedGenres.equals("null")) {
+            subscribedGenres = new ArrayList<>();
+        } else {
+            subscribedGenres = new ArrayList<>(Arrays.asList(clientNotifications.split(",")));
+        }
+
         isActive = true;
         areMoviesFiltered = false;
     }
@@ -131,6 +139,8 @@ public final class Client {
         notifications = null;
 
         pageStack = null;
+
+        subscribedGenres = null;
 
         isActive = false;
         areMoviesFiltered = false;
@@ -198,6 +208,16 @@ public final class Client {
 
     public List<String> getNotifications() {
         return notifications;
+    }
+
+    public List<String> getSubscribedGenres() {
+        return subscribedGenres;
+    }
+
+    public void subscribeToGenre(final String genre) {
+        if (genre != null) {
+            subscribedGenres.add(genre);
+        }
     }
 
     /**

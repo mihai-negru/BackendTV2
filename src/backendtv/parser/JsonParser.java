@@ -117,7 +117,7 @@ public final class JsonParser {
             final var outputObject = output.addObject();
 
             outputObject.put("name", movie.get("name"));
-            outputObject.put("year", Integer.parseInt(movie.get("year")));
+            outputObject.put("year", movie.get("year"));
             outputObject.put("duration", Integer.parseInt(movie.get("duration")));
 
             var tempArray = outputObject.putArray("genres");
@@ -163,10 +163,13 @@ public final class JsonParser {
 
     public static void parseNotification(final ArrayNode output, final String notification) {
         final var outputObject = output.addObject();
+        final var notificationInfo = notification.split(";");
 
-        final var aux = notification.split(";");
-
-        outputObject.put("movieName", aux[0]);
-        outputObject.put("message", aux[1]);
+        if (notificationInfo.length != 2) {
+            outputObject.put("error", "notification failed");
+        } else {
+            outputObject.put("movieName", notificationInfo[0]);
+            outputObject.put("message", notificationInfo[1]);
+        }
     }
 }

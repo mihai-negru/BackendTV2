@@ -5,9 +5,12 @@ public final class ActionFetch {
     private String page;
     private String movie;
     private String feature;
+    private String subscribedGenre;
     private CredentialsFetch credentials;
     private String startsWith;
     private FilterActionFetch filters;
+    private MovieFetch addedMovie;
+    private String deletedMovie;
     private int count;
     private int rate;
 
@@ -47,6 +50,14 @@ public final class ActionFetch {
         feature = newFeature;
     }
 
+    public String getSubscribedGenre() {
+        return subscribedGenre;
+    }
+
+    public void setSubscribedGenre(final String newSubscribedGenre) {
+        subscribedGenre = newSubscribedGenre;
+    }
+
     public CredentialsFetch getCredentials() {
         return credentials;
     }
@@ -69,6 +80,22 @@ public final class ActionFetch {
 
     public void setFilters(final FilterActionFetch newFilters) {
         filters = newFilters;
+    }
+
+    public MovieFetch getAddedMovie() {
+        return addedMovie;
+    }
+
+    public void setAddedMovie(final MovieFetch newAddedMovie) {
+        addedMovie = newAddedMovie;
+    }
+
+    public String getDeletedMovie() {
+        return deletedMovie;
+    }
+
+    public void setDeletedMovie(final String newDeletedMovie) {
+        deletedMovie = newDeletedMovie;
     }
 
     public int getCount() {

@@ -10,15 +10,12 @@ public final class ChangePageBackAction implements ActionCommand {
 
     @Override
     public void execute(final ArrayNode output) {
-        System.out.println("Executed back action");
         final var server = ServerApp.connect();
         final var client = server.fetchActiveClient();
 
         final var parserObject = output.objectNode();
         if (client.getStatus()) {
-            System.out.println("Client is active");
             if (!client.changePageBack()) {
-                System.out.println("Could not change the page because no page was found");
                 parserObject.put("error", "Error");
                 parserObject.putArray("currentMoviesList");
                 parserObject.putNull("currentUser");
