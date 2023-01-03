@@ -266,7 +266,12 @@ public final class Client implements ObserverHandler {
             return false;
         }
 
+        final var lastPage = loadedPage;
         loadedPage = pageStack.pop();
+
+        if ((lastPage == PageType.DETAILS) && (loadedPage == PageType.MOVIES)) {
+            setMoviesAsNonFiltered();
+        }
 
         return true;
     }
@@ -362,6 +367,10 @@ public final class Client implements ObserverHandler {
             return false;
         }
 
+        if (purchasedMovies.contains(movieName)) {
+            return true;
+        }
+
         if (accountType.equals("premium")) {
             if (numFreePremiumMovies <= 0 && tokensCount < 2) {
                 return false;
@@ -402,6 +411,10 @@ public final class Client implements ObserverHandler {
             return false;
         }
 
+        if (watchedMovies.contains(movieName)) {
+            return true;
+        }
+
         return watchedMovies.add(movieName);
     }
 
@@ -422,6 +435,10 @@ public final class Client implements ObserverHandler {
             return false;
         }
 
+        if (likedMovies.contains(movieName)) {
+            return true;
+        }
+
         return likedMovies.add(movieName);
     }
 
@@ -440,6 +457,10 @@ public final class Client implements ObserverHandler {
 
         if (!watchedMovies.contains(movieName)) {
             return false;
+        }
+
+        if (ratedMovies.contains(movieName)) {
+            return true;
         }
 
         return ratedMovies.add(movieName);
@@ -500,5 +521,13 @@ public final class Client implements ObserverHandler {
         } else if (accountType.equals("standard")) {
             tokensCount += 2;
         }
+    }
+
+    public void getRecommendation(final String movieName) {
+        if (movieName == null) {
+            return;
+        }
+
+        notifications.add(movieName + ";" + "Recommendation");
     }
 }

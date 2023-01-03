@@ -148,6 +148,10 @@ public final class ServerApp implements ObserverHandler {
         while (actions.hasNext()) {
             actions.next();
         }
+
+        if (activeClient.getStatus() && activeClient.getAccountType().equals("premium")) {
+            actions.premiumBenefits();
+        }
     }
 
     /**
