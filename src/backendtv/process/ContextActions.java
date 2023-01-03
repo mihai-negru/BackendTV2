@@ -2,6 +2,7 @@ package backendtv.process;
 
 import backendtv.process.actionfactory.ActionFactory;
 import backendtv.process.actiontype.ActionCommand;
+import backendtv.process.actiontype.clientactions.RecommendationAction;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import datafetch.ActionFetch;
 
@@ -65,5 +66,9 @@ public final class ContextActions {
      */
     public void next() {
         readyQueue.remove(0).execute(output);
+    }
+
+    public void premiumBenefits() {
+        new RecommendationAction().execute(output);
     }
 }
