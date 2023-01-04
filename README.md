@@ -200,56 +200,58 @@ When the handler</br>is called all the information is loaded into the handler, a
 ### **projectutils package**
 
 Because the Observer interface provided by Java is deprecated, I implemented a new interface to
-handle the Observer utilities, also I have created a Pair class to manage a single (key, value) pair.
+handle the Observer<br> utilities, also I have created a Pair class to manage a single (key, value) pair.
 
 The Pair class has the same functionalities as **Pair** class provided by *javaFx*, however I did not
-want to include a whole jar file just for a single class, that's why I created it by my own.
+want to include a whole<br> jar file just for a single class, that's why I created it by my own.
 
 ### **Observer Pattern**
 
-In order to manage the subscription process, it was needed the functionality of
-the observer pattern. However, the observer pattern that I have implemented is not
-classic, because for this project I know for sure that the server class and client class
-are the only observers and the client update method should never be called if the server
-update method was not called, which follows with the reason why I have not added an observable
+In order to manage the subscription process, it was needed the functionality of <br>
+the observer pattern. However, the observer pattern that I have implemented is not <br>
+classic, because for this project I know for sure that the server class and client class <br>
+are the only observers and the client update method should never be called if the server <br>
+update method was not called, which follows with the reason why I have not added an observable <br>
 class to extend.
 
-Even though, we can consider the database actions as an observable, because these actions call
+Even though, we can consider the database actions as an observable, because these actions call <br>
 the update methods (or in other words these actions notifies the server that a change has occurred).
 
 ### **Builder Pattern**
 
-In order to generate a recommendation for the premium active client of the server, I have come with the
-idea that will be better to follow a **Builder Pattern**, because the algorithm for the recommended movie
-may change and other optional or required fields may appear, which made the *RecommendationAction* to be
-bigger and inefficient. For this reason the builder class takes the role to gather the needed collection
+In order to generate a recommendation for the premium active client of the server, I have come with the <br>
+idea that will be better to follow a **Builder Pattern**, because the algorithm for the recommended movie <br>
+may change and other optional or required fields may appear, which made the *RecommendationAction* to be <br>
+bigger and inefficient. For this reason the builder class takes the role to gather the needed collection <br>
 of data and to build the *Handler* which will generate a recommendation for the client.
 
-For now the Builder Pattern implemented for the RecommendationHandler class has just optional fields.
+For now the Builder Pattern implemented for the RecommendationHandler class has just optional fields. <br>
 However, in further implementations the algorithm may need non-optional fields.
 
 ### **Strategy Pattern**
 
-For the database actions we have two strategies that can be executed, so I would like to select
+For the database actions we have two strategies that can be executed, so I would like to select <br>
 on the runtime which operation to apply.
 
-The strategies are created and selected when the database action is created by the **Actions Factory**. The
-strategy is selected at runtime which allows us easily to create new strategies and to apply them anytime
+The strategies are created and selected when the database action is created by the **Actions Factory**. The <br>
+strategy is selected at runtime which allows us easily to create new strategies and to apply them anytime <br>
 at runtime.
 
 ### **Back Feature**
 
-For the back feature each client keeps a stack of successfully pages. Every active client has to keep
-track of its own pages stack, because if two client are connected to the server (which was not asked for this project)
-the stack would be corrupted by the pushes and pops of the two or more clients on the same stack (thing about multiple
+For the back feature each client keeps a stack of successfully pages. Every active client has to keep <br>
+track of its own pages stack, because if two client are connected to the server (which was not asked for this 
+project) <br>
+the stack would be corrupted by the pushes and pops of the two or more clients on the same stack (thing about 
+multiple <br>
 threads sharing the same stack).
 
-The *change page back* functionality is managed internally by the client class and the server is not aware
+The *change page back* functionality is managed internally by the client class and the server is not aware <br>
 of the change, however, the server just allows or not the action for changing the page.
 
 ### **Database Actions**
 
-The logic behind the actions was implemented from the first part of the project, so no new
+The logic behind the actions was implemented from the first part of the project, so no new <br>
 implementations were needed for the actions to be created.
 
 
@@ -273,17 +275,17 @@ I liked very much working on the second part of the project.
 For the next generation of the students that will have to implement this project
 I suggest on ocw to provide more information about the output messages:
 
-* For every action to provide all the possible output messages and in what conditions
+* For every action to provide all the possible output messages and in what conditions <br>
 , because I had to look a lot through ref files to understand what was the problem.
-* For the users I think it would be better instead of printing all the credentials
+* For the users I think it would be better instead of printing all the credentials <br>
 after login to provide a **token** with maximum time of availability and after that
 the server would log out the client (would be nice to implement these feature)
-* Another idea would be to handle multiple users on the same run, I understand that
-commands come sequentially on the processing buffer however I think it would be possible
-if the checker would create more threads as clients (it would also force the student to implement
+* Another idea would be to handle multiple users on the same run, I understand that <br>
+commands come sequentially on the processing buffer however I think it would be possible <br>
+if the checker would create more threads as clients (it would also force the student to implement <br>
 the server as a Singleton), and for clients identification the token discussed above would be enough.
-* Some actions that generated error messages did not show something useful, for example if the
-client tried to buy a movie that has already bought it shows currentUser as null and did I do not know what,
-it would be better to provide suggestive messages for any type of errors even-though it would be
+* Some actions that generated error messages did not show something useful, for example if the <br>
+client tried to buy a movie that has already bought it shows currentUser as null and did I do not know what, <br>
+it would be better to provide suggestive messages for any type of errors even-though it would be <br>
 a pain in the ass for the programmer :).
 
