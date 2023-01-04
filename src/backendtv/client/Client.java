@@ -1,6 +1,6 @@
 package backendtv.client;
 
-import backendtv.notification.ObserverHandler;
+import projectutils.ObserverHandler;
 import backendtv.pagestype.PageType;
 
 import java.util.*;
@@ -368,7 +368,7 @@ public final class Client implements ObserverHandler {
         }
 
         if (purchasedMovies.contains(movieName)) {
-            return true;
+            return false;
         }
 
         if (accountType.equals("premium")) {
@@ -464,6 +464,10 @@ public final class Client implements ObserverHandler {
         }
 
         return ratedMovies.add(movieName);
+    }
+
+    public boolean hasRatedMovie(final String movieName) {
+        return ratedMovies.contains(movieName);
     }
 
     @Override

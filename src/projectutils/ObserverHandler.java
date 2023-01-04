@@ -1,4 +1,4 @@
-package backendtv.notification;
+package projectutils;
 
 import java.util.List;
 

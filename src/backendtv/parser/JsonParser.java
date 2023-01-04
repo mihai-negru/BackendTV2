@@ -4,6 +4,7 @@ import backendtv.server.ServerApp;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -150,7 +151,7 @@ public final class JsonParser {
 
             double rating = 0;
             for (String rate : movie.get("rating").split(",")) {
-                rating += Double.parseDouble(rate);
+                rating += Double.parseDouble(rate.split(":")[1]);
             }
 
             final int numRatings = Integer.parseInt(movie.get("numRatings"));

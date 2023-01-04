@@ -35,7 +35,7 @@ public class AddDatabaseOperation implements DatabaseStrategy {
                 "actors", String.join(",", addedMovieInfo.getActors()),
                 "countriesBanned", String.join(",", bannedCountries),
                 "numLikes", "0",
-                "rating", "0",
+                "rating", "Unknown:0",
                 "numRatings", "0"
         ));
 

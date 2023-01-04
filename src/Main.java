@@ -15,7 +15,6 @@ import java.io.IOException;
  * @author Mihai Negru
  */
 public final class Main {
-    static int counter = 1;
 
     private Main() {
         // Do not let anyone instantiate this class
@@ -46,12 +45,5 @@ public final class Main {
         ServerApp.connect().start(inputData, outputData);
 
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(args[1]), outputData);
-
-        if (counter == 5) {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("my_result_" + 4 + ".json"),
-                    outputData);
-        }
-
-        ++counter;
     }
 }

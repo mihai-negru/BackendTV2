@@ -42,7 +42,7 @@ public final class FilterAction implements ActionCommand {
             final Function<Map<String, String>, Double> rateCalculator = m -> {
                 double ratingValue = 0;
                 for (String rate : m.get("rating").split(",")) {
-                    ratingValue += Double.parseDouble(rate);
+                    ratingValue += Double.parseDouble(rate.split(":")[1]);
                 }
 
                 final int numRatings = Integer.parseInt(m.get("numRatings"));

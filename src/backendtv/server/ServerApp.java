@@ -1,7 +1,7 @@
 package backendtv.server;
 
 import backendtv.client.Client;
-import backendtv.notification.ObserverHandler;
+import projectutils.ObserverHandler;
 import backendtv.process.ContextActions;
 import backendtv.storage.Database;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -122,7 +122,7 @@ public final class ServerApp implements ObserverHandler {
                         "actors", String.join(",", movieInput.getActors()),
                         "countriesBanned", String.join(",", movieInput.getCountriesBanned()),
                         "numLikes", "0",
-                        "rating", "0",
+                        "rating", "Unknown:0",
                         "numRatings", "0"
                 ));
             }

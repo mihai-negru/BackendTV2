@@ -7,6 +7,10 @@ import backendtv.server.ServerApp;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import datafetch.ActionFetch;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * <p>Specific Command class to rate a movie regarding
  * the active client.</p>
@@ -50,6 +54,8 @@ public final class RateAction implements ActionCommand {
         } else {
             movieToRate = client.getSeeMovie();
 
+            final boolean hasRatedThisMovieAlready = client.hasRatedMovie(movieToRate);
+
             if (!client.rateMovie(movieToRate)) {
                 JsonParser.parseBasicError(parserObject);
             } else {
@@ -57,23 +63,19 @@ public final class RateAction implements ActionCommand {
                         .collection("movies")
                         .findOne("name", movieToRate);
 
-                server.fetchDatabase()
-                        .collection("movies")
-                        .modifyField(
-                                "name", movieToRate,
-                                "numRatings", Integer.toString(
-                                        Integer.parseInt(server.fetchDatabase()
-                                                .collection("movies")
-                                                .findOne("name", movieToRate)
-                                                .get("numRatings")) + 1)
-                        );
+                if (hasRatedThisMovieAlready) {
+                    final List<String> movieRatings = new ArrayList<>(Arrays.asList(movie.get("rating").split(",")));
 
-                server.fetchDatabase()
-                        .collection("movies")
-                        .modifyField(
-                                "name", movieToRate,
-                                "rating", movie.get("rating") + "," + movieRate
-                        );
+                    movieRatings.removeIf(name -> name.startsWith(client.getName()));
+                    movieRatings.add(client.getName() + ":" + movieRate);
+
+                    movie.put("rating", String.join(",", movieRatings));
+                } else {
+                    movie.put("rating", movie.get("rating") + "," + client.getName() + ":" + movieRate);
+                    movie.put("numRatings", Integer.toString(Integer.parseInt(movie.get("numRatings")) + 1));
+                }
+
+                server.fetchDatabase().collection("movies").modifyMember("name", movieToRate, movie);
 
                 parserObject.putNull("error");
                 JsonParser.parseMovie(parserObject.putArray("currentMoviesList"),
