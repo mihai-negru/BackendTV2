@@ -68,6 +68,11 @@ public final class ContextActions {
         readyQueue.remove(0).execute(output);
     }
 
+    /**
+     * <p>Generate and execute an action that
+     * gives to the current premium client
+     * a movie for recommendation.</p>
+     */
     public void premiumBenefits() {
         new RecommendationAction().execute(output);
     }

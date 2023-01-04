@@ -4,7 +4,6 @@ import backendtv.server.ServerApp;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -18,11 +17,17 @@ public final class JsonParser {
         // Do not let anyone instantiate this class
     }
 
+    /**
+     * <p>Parses the basic error message in the output node.</p>
+     *
+     * @param output main node to parse the error message.
+     */
     public static void parseBasicError(final ObjectNode output) {
         output.put("error", "Error");
         output.putArray("currentMoviesList");
         output.putNull("currentUser");
     }
+
     /**
      * <p>Parses a {@code Client} object to a Json File.</p>
      *
@@ -167,6 +172,14 @@ public final class JsonParser {
         }
     }
 
+    /**
+     * <p>Parses a notification from the client's notifications queue.</p>
+     *
+     * @param output the main node to parse the notification.
+     * @param notification the {@code String} representation for the notifications,
+     *                     contains the message then separated by the comma contains
+     *                     the actual notification.
+     */
     public static void parseNotification(final ArrayNode output, final String notification) {
         final var notificationInfo = notification.split(";");
 

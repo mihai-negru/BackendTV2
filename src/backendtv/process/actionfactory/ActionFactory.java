@@ -1,9 +1,18 @@
 package backendtv.process.actionfactory;
 
-import backendtv.process.actiontype.*;
+import backendtv.process.actiontype.ActionCommand;
 import backendtv.process.actiontype.adminactions.AdminDatabaseAction;
-import backendtv.process.actiontype.clientactions.*;
-import backendtv.process.actiontype.moviesactions.*;
+import backendtv.process.actiontype.clientactions.BuyPremiumAction;
+import backendtv.process.actiontype.clientactions.BuyTokensAction;
+import backendtv.process.actiontype.clientactions.LoginAction;
+import backendtv.process.actiontype.clientactions.RegisterAction;
+import backendtv.process.actiontype.moviesactions.FilterAction;
+import backendtv.process.actiontype.moviesactions.LikeAction;
+import backendtv.process.actiontype.moviesactions.PurchaseAction;
+import backendtv.process.actiontype.moviesactions.RateAction;
+import backendtv.process.actiontype.moviesactions.SearchAction;
+import backendtv.process.actiontype.moviesactions.SubscribeAction;
+import backendtv.process.actiontype.moviesactions.WatchAction;
 import backendtv.process.actiontype.pagesactions.ChangePageAction;
 import backendtv.process.actiontype.pagesactions.ChangePageBackAction;
 import datafetch.ActionFetch;
@@ -31,9 +40,8 @@ public final class ActionFactory {
      * null if the flags are unknown.
      */
     public ActionCommand createAction(final ActionFetch actionInfo) {
-        final String actionType = actionInfo.getType().toLowerCase();
-        if (actionType.equals("on page")) {
-            return switch (actionInfo.getFeature()) {
+        return switch (actionInfo.getType().toLowerCase()) {
+            case "on page" -> switch (actionInfo.getFeature()) {
                 case "register" -> new RegisterAction(actionInfo);
                 case "login" -> new LoginAction(actionInfo);
                 case "search" -> new SearchAction(actionInfo);
@@ -47,16 +55,10 @@ public final class ActionFactory {
                 case "subscribe" -> new SubscribeAction(actionInfo);
                 default -> null;
             };
-        }
-
-        if (actionType.equals("back")) {
-            return new ChangePageBackAction();
-        }
-
-        if (actionType.equals("database")) {
-            return new AdminDatabaseAction(actionInfo);
-        }
-
-        return new ChangePageAction(actionInfo);
+            case "back" -> new ChangePageBackAction();
+            case "database" -> new AdminDatabaseAction(actionInfo);
+            case "change page" -> new ChangePageAction(actionInfo);
+            default -> null;
+        };
     }
 }

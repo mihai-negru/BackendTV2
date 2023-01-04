@@ -1,33 +1,53 @@
 package backendtv.process.actiontype.adminactions;
 
 import backendtv.server.ServerApp;
-import backendtv.storage.Database;
 import datafetch.ActionFetch;
 import datafetch.MovieFetch;
 
 import java.util.Map;
 
-public class AddDatabaseOperation implements DatabaseStrategy {
+/**
+ * <p>The Strategy in order to add a movie for the database
+ * and to notify the server about this change. The strategy also
+ * works like an observable class, however it is known that the
+ * single observer that triggers other observers is the main server.</p>
+ *
+ * @since 2.0.0
+ * @author Mihai Negru
+ */
+public final class AddDatabaseOperation implements DatabaseStrategy {
     private final MovieFetch addedMovieInfo;
 
+    /**
+     * <p>Extracts the information about the movie to add in the database.</p>
+     * @param initOperationInfo information about the operation process.
+     */
     public AddDatabaseOperation(final ActionFetch initOperationInfo) {
         addedMovieInfo = initOperationInfo.getAddedMovie();
     }
 
+    /**
+     * <p>Generates a {@code Map} representation for the
+     * movie and inserts it in the database and notifies
+     * the server about the change.</p>
+     *
+     * @return true if the movie is not already in the database
+     * or false otherwise.
+     */
     @Override
     public boolean apply() {
         final var server = ServerApp.connect();
-        final var database = server.fetchDatabase();
+        final var moviesCollection = server.fetchDatabase().collection("movies");
 
         final String movieName = addedMovieInfo.getName();
         final var movieGenres = addedMovieInfo.getGenres();
         final var bannedCountries = addedMovieInfo.getCountriesBanned();
 
-        if (database.collection("movies").findOne("name", movieName) != null) {
+        if (moviesCollection.findOne("name", movieName) != null) {
             return false;
         }
 
-        database.collection("movies").insert(Map.of(
+        moviesCollection.insert(Map.of(
                 "name", movieName,
                 "year", Integer.toString(addedMovieInfo.getYear()),
                 "duration", Integer.toString(addedMovieInfo.getDuration()),

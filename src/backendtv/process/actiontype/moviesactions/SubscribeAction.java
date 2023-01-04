@@ -9,12 +9,34 @@ import datafetch.ActionFetch;
 
 import java.util.Arrays;
 
-public class SubscribeAction implements ActionCommand {
+/**
+ * <p>Specific Command class to subscribe to a specific
+ * genre of a film for the active client.</p>
+ *
+ * @since 2.0.0
+ * @author Mihai Negru
+ */
+public final class SubscribeAction implements ActionCommand {
     private final String selectedGenre;
+
+    /**
+     * <p>Extracts the specific genre in order to subscribe.</p>
+     *
+     * @param actionInfo information about one action to be created.
+     */
     public SubscribeAction(final ActionFetch actionInfo) {
         selectedGenre = actionInfo.getSubscribedGenre();
     }
 
+    /**
+     * <p>Subscribes the active client for just one genre.
+     * If the action went successfully nothing is printed
+     * to the log file otherwise the basic error message
+     * is generated.</p>
+     *
+     * @param output main array node to parse the output data
+     *               to a Json File.
+     */
     @Override
     public void execute(final ArrayNode output) {
         final var server = ServerApp.connect();
@@ -26,11 +48,10 @@ public class SubscribeAction implements ActionCommand {
             JsonParser.parseBasicError(parserObject);
             output.add(parserObject);
         } else {
-            final var movieInfo = database.collection("movies").findOne("name", client.getSeeMovie());
+            final var movieInfo = database.collection("movies")
+                    .findOne("name", client.getSeeMovie());
 
-            if (movieInfo == null) {
-                System.out.println("Movie was not found which is odd");
-            } else {
+            if (movieInfo != null) {
                 final var movieGenres = Arrays.asList(movieInfo.get("genres").split(","));
 
                 if (movieGenres.contains(selectedGenre)) {

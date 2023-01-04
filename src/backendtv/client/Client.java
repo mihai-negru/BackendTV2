@@ -3,7 +3,12 @@ package backendtv.client;
 import projectutils.ObserverHandler;
 import backendtv.pagestype.PageType;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>Simple class maintaining the information about a server client.</p>
@@ -37,10 +42,10 @@ public final class Client implements ObserverHandler {
     private final List<String> availableMovies;
     private final List<String> filteredMovies;
     private final List<String> notifications;
-    private final Deque<PageType> pageStack;
     private final List<String> subscribedGenres;
     private final boolean isActive;
     private boolean areMoviesFiltered;
+    private final Deque<PageType> pageStack;
 
     /**
      * <p>Create an active Client for the server.</p>
@@ -102,8 +107,6 @@ public final class Client implements ObserverHandler {
             notifications = new ArrayList<>(Arrays.asList(clientNotifications.split(",")));
         }
 
-        pageStack = new ArrayDeque<>();
-
         final String clientSubscribedGenres = clientData.get("subscribedGenres");
         if (clientSubscribedGenres.equals("null")) {
             subscribedGenres = new ArrayList<>();
@@ -113,6 +116,8 @@ public final class Client implements ObserverHandler {
 
         isActive = true;
         areMoviesFiltered = false;
+
+        pageStack = new ArrayDeque<>();
     }
 
     /**
@@ -139,12 +144,12 @@ public final class Client implements ObserverHandler {
         filteredMovies = null;
         notifications = null;
 
-        pageStack = null;
-
         subscribedGenres = null;
 
         isActive = false;
         areMoviesFiltered = false;
+
+        pageStack = null;
     }
 
     public PageType getLoadedPage() {
@@ -215,6 +220,13 @@ public final class Client implements ObserverHandler {
         return subscribedGenres;
     }
 
+    /**
+     * <p>Adds one genre to the subscribed genres.</p>
+     *
+     * @param genre new genre to add for the subscription.
+     * @return true if the genre was added successfully or
+     * false if the genre already existed or the genre is not valid.
+     */
     public boolean subscribeToGenre(final String genre) {
         if ((genre == null) || (subscribedGenres.contains(genre))) {
             return false;
@@ -261,6 +273,12 @@ public final class Client implements ObserverHandler {
         }
     }
 
+    /**
+     * <p>Changes the current loaded page to the previous loaded page.</p>
+     *
+     * @return true if the loaded page went back, or false if the operation
+     * is not allowed.
+     */
     public boolean changePageBack() {
         if (pageStack.isEmpty()) {
             return false;
@@ -306,7 +324,7 @@ public final class Client implements ObserverHandler {
     }
 
     /**
-     * <p>Makrs movies as non-filtered.</p>
+     * <p>Marks movies as non-filtered.</p>
      */
     public void setMoviesAsNonFiltered() {
         areMoviesFiltered = false;
@@ -443,6 +461,16 @@ public final class Client implements ObserverHandler {
     }
 
     /**
+     * <p>Checks if the client has already rated the selected movie.</p>
+     *
+     * @param movieName the name of the movie to check.
+     * @return true if the movie was already rated, or false otherwise.
+     */
+    public boolean hasRatedMovie(final String movieName) {
+        return ratedMovies.contains(movieName);
+    }
+
+    /**
      * <p>Rates a movie from the list of the
      * watched movies.</p>
      *
@@ -466,13 +494,20 @@ public final class Client implements ObserverHandler {
         return ratedMovies.add(movieName);
     }
 
-    public boolean hasRatedMovie(final String movieName) {
-        return ratedMovies.contains(movieName);
-    }
-
+    /**
+     * <p>Depending on the message that triggered the method call,
+     * the client will add or delete a movie from the available list.
+     * For the deletion any instance (name) of the movie will be
+     * removed.</p>
+     *
+     * @param message the message that called the update method.
+     * @param movieName the movie that needs to be notified.
+     * @param genres movie genres.
+     * @param bannedCountries countries that are not allowed to watch the movie.
+     */
     @Override
-    public void updateNotifications(final String message, final String movieName, final List<String> genres,
-                                    final List<String> bannedCountries) {
+    public void updateNotifications(final String message, final String movieName,
+                                    final List<String> genres, final List<String> bannedCountries) {
         if ((message == null) || (movieName == null) || (genres == null)) {
             return;
         }
@@ -496,6 +531,12 @@ public final class Client implements ObserverHandler {
         }
     }
 
+    /**
+     * <p>Adds one movie to the available list of movies that
+     * the client can access.</p>
+     *
+     * @param movieName the name of the movie to add to the list.
+     */
     public void addAvailableMovie(final String movieName) {
         if (movieName == null) {
             return;
@@ -504,6 +545,12 @@ public final class Client implements ObserverHandler {
         availableMovies.add(movieName);
     }
 
+    /**
+     * <p>Removes one movie from the available list of movies that
+     * the client can access.</p>
+     *
+     * @param movieName the name of the movie to remove from the list.
+     */
     public void removeAvailableMovie(final String movieName) {
         if (movieName == null) {
             return;
@@ -527,7 +574,16 @@ public final class Client implements ObserverHandler {
         }
     }
 
-    public void getRecommendation(final String movieName) {
+    /**
+     * <p>Gets the name of the film to recommend and
+     * appends it to the notifications queue of the client
+     * as a notification message.</p>
+     *
+     * @param movieName the name of the movie to recommend or
+     *                  "No Recommendation" {@code String} if
+     *                  no film can be recommended.
+     */
+    public void acceptRecommendation(final String movieName) {
         if (movieName == null) {
             return;
         }

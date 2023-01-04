@@ -64,18 +64,23 @@ public final class RateAction implements ActionCommand {
                         .findOne("name", movieToRate);
 
                 if (hasRatedThisMovieAlready) {
-                    final List<String> movieRatings = new ArrayList<>(Arrays.asList(movie.get("rating").split(",")));
+                    final List<String> movieRatings = new ArrayList<>(Arrays.asList(
+                            movie.get("rating").split(",")));
 
                     movieRatings.removeIf(name -> name.startsWith(client.getName()));
                     movieRatings.add(client.getName() + ":" + movieRate);
 
                     movie.put("rating", String.join(",", movieRatings));
                 } else {
-                    movie.put("rating", movie.get("rating") + "," + client.getName() + ":" + movieRate);
-                    movie.put("numRatings", Integer.toString(Integer.parseInt(movie.get("numRatings")) + 1));
+                    movie.put("rating",
+                            movie.get("rating") + "," + client.getName() + ":" + movieRate);
+                    movie.put("numRatings",
+                            Integer.toString(Integer.parseInt(movie.get("numRatings")) + 1));
                 }
 
-                server.fetchDatabase().collection("movies").modifyMember("name", movieToRate, movie);
+                server.fetchDatabase()
+                        .collection("movies")
+                        .modifyMember("name", movieToRate, movie);
 
                 parserObject.putNull("error");
                 JsonParser.parseMovie(parserObject.putArray("currentMoviesList"),

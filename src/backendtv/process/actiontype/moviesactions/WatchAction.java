@@ -18,7 +18,7 @@ public final class WatchAction implements ActionCommand {
     private String movieToWatch;
 
     /**
-     * <p>Extract the movie to watch.</p>
+     * <p>Extracts the movie to watch.</p>
      *
      * @param actionInfo information about one action to be created.
      */

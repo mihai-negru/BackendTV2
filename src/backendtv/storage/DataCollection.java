@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 /**
  * <p>Collection of data, stores a {@code Map} of String to String pairs,
@@ -171,6 +170,11 @@ public final class DataCollection {
         return false;
     }
 
+    /**
+     * <p>Deletes a member from the collection workspace.</p>
+     * @param fieldKey field key of the selected member.
+     * @param fieldValue field value of the selected member.
+     */
     public void delete(final String fieldKey, final String fieldValue) {
         if ((fieldKey == null) || (fieldValue == null)) {
             return;

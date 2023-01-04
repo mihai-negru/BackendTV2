@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import datafetch.ActionFetch;
 
 /**
- * <p>Specific Command class to change the page pf an
+ * <p>Specific Command class to change the page of an
  * active client on the running server.</p>
  *
  * @since 1.0.0
