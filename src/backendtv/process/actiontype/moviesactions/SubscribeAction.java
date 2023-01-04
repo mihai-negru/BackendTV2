@@ -1,4 +1,4 @@
-package backendtv.process.actiontype.clientactions;
+package backendtv.process.actiontype.moviesactions;
 
 import backendtv.pagestype.PageType;
 import backendtv.parser.JsonParser;
