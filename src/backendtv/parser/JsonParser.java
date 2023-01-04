@@ -167,12 +167,10 @@ public final class JsonParser {
     }
 
     public static void parseNotification(final ArrayNode output, final String notification) {
-        final var outputObject = output.addObject();
         final var notificationInfo = notification.split(";");
 
-        if (notificationInfo.length != 2) {
-            outputObject.put("error", "notification failed");
-        } else {
+        if (notificationInfo.length == 2) {
+            final var outputObject = output.addObject();
             outputObject.put("movieName", notificationInfo[0]);
             outputObject.put("message", notificationInfo[1]);
         }

@@ -263,6 +263,36 @@ public final class ServerApp implements ObserverHandler {
     public void logoutClient() {
         final var usersCollection = database.collection("users");
 
+        String purchasedMovies = String.join(",", activeClient.getPurchasedMovies());
+        if (purchasedMovies.isEmpty() || purchasedMovies.isBlank()) {
+            purchasedMovies = "null";
+        }
+
+        String watchedMovies = String.join(",", activeClient.getWatchedMovies());
+        if (watchedMovies.isEmpty() || watchedMovies.isBlank()) {
+            watchedMovies = "null";
+        }
+
+        String likedMovies = String.join(",", activeClient.getLikedMovies());
+        if (likedMovies.isEmpty() || likedMovies.isBlank()) {
+            likedMovies = "null";
+        }
+
+        String ratedMovies = String.join(",", activeClient.getRatedMovies());
+        if (ratedMovies.isEmpty() || ratedMovies.isBlank()) {
+            ratedMovies = "null";
+        }
+
+        String notifications = String.join(",", activeClient.getNotifications());
+        if (notifications.isEmpty() || notifications.isBlank()) {
+            notifications = "null";
+        }
+
+        String subscribedGenres = String.join(",", activeClient.getSubscribedGenres());
+        if (subscribedGenres.isEmpty() || subscribedGenres.isBlank()) {
+            subscribedGenres = "null";
+        }
+
         final boolean errCode = usersCollection
                 .modifyMember("name", activeClient.getName(), Map.ofEntries(
                         Map.entry("name", activeClient.getName()),
@@ -273,14 +303,12 @@ public final class ServerApp implements ObserverHandler {
                         Map.entry("tokensCount", Integer.toString(activeClient.getTokensCount())),
                         Map.entry("numFreePremiumMovies", Integer.toString(
                                 activeClient.getNumFreePremiumMovies())),
-                        Map.entry("purchasedMovies", String.join(",",
-                                activeClient.getPurchasedMovies())),
-                        Map.entry("watchedMovies", String.join(",",
-                                activeClient.getWatchedMovies())),
-                        Map.entry("likedMovies", String.join(",", activeClient.getLikedMovies())),
-                        Map.entry("ratedMovies", String.join(",", activeClient.getRatedMovies())),
-                        Map.entry("notifications", String.join(",", activeClient.getNotifications())),
-                        Map.entry("subscribedGenres", String.join(",", activeClient.getSubscribedGenres()))
+                        Map.entry("purchasedMovies", purchasedMovies),
+                        Map.entry("watchedMovies", watchedMovies),
+                        Map.entry("likedMovies", likedMovies),
+                        Map.entry("ratedMovies", ratedMovies),
+                        Map.entry("notifications", notifications),
+                        Map.entry("subscribedGenres", subscribedGenres)
                 ));
 
         if (errCode) {

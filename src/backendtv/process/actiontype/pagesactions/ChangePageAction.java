@@ -93,7 +93,6 @@ public final class ChangePageAction implements ActionCommand {
             if ((selectedMovie == null) || (clientPage != PageType.MOVIES)) {
                 parserObject.put("error", "Error");
                 parserObject.putArray("currentMoviesList");
-//                JsonParser.parseClient(parserObject);
                 parserObject.putNull("currentUser");
                 output.add(parserObject);
             } else {

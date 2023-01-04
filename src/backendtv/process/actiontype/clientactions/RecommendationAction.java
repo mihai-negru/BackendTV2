@@ -87,6 +87,5 @@ public class RecommendationAction implements ActionCommand {
         parserObject.putNull("error");
         parserObject.putNull("currentMoviesList");
         JsonParser.parseClient(parserObject);
-
     }
 }
